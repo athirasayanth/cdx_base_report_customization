@@ -21,94 +21,55 @@
                         <img t-if="res_company.logo" t-att-src="image_data_uri(res_company.logo)"
                              style="width:200px; height:150px;"/>
                     </div>
-                    <table style="width:100%; ">
+
+                    <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="padding: 20px; width: 30%; height: 150px;vertical-align: top;">
-                                <div>
-                                    <div>
-                                        <strong>
-                                            <span t-esc="o.company_id.name"/>
-                                        </strong>
-                                        <br/>
-
-
-                                        <t t-if="o.company_id.state_id">
-                                            <span t-esc="o.company_id.state_id.name"/>
-                                            <br/>
-                                        </t>
-                                        <t t-if="o.company_id.country_id">
-                                            <span t-esc="o.company_id.country_id.name"/>
-                                            <br/>
-                                        </t>
-
-                                        <t t-if="o.company_id.vat">
-
-                                            <span t-esc="o.company_id.vat"/>
-                                            <br/>
-                                        </t>
-                                    </div>
-                                </div>
+                            <!-- Column 1: Partner Details -->
+                            <td style="padding: 20px; width: 60%; vertical-align: top;">
+                                <strong>
+                                    <span t-esc="o.partner_id.name"/>
+                                </strong>
+                                <br/>
+                                <t t-if="o.partner_id.state_id">
+                                    <span t-esc="o.partner_id.state_id.name"/>
+                                    <br/>
+                                </t>
+                                <t t-if="o.partner_id.country_id">
+                                    <span t-esc="o.partner_id.country_id.name"/>
+                                    <br/>
+                                </t>
+                                <span>TRN: 100308172400003</span>
+                                <br/>
                             </td>
 
-                            <td style="padding: 20px; width: 30%; height: 150px; vertical-align: top;">
-                                <div>
-                                    <div>
-                                        <strong>
-                                            <span t-esc="o.partner_id.name"/>
-                                        </strong>
-                                        <br/>
-                                        <t t-if="o.partner_id.state_id">
-                                            <span t-esc="o.partner_id.state_id.name"/>
-                                            <br/>
-                                        </t>
-                                        <t t-if="o.partner_id.country_id">
-                                            <span t-esc="o.partner_id.country_id.name"/>
-                                            <br/>
-                                        </t>
-
-                                        <t>
-                                            <span>TRN: 100308172400003</span>
-                                            <br/>
-                                        </t>
-
-                                    </div>
-                                </div>
+                            <!-- Column 2: Headings -->
+                            <td style="padding: 20px;width: 20%; vertical-align: top; text-align: left;">
+                                <strong>Invoice Date:</strong>
+                                <br/>
+                                <strong>Due Date:</strong>
+                                <br/>
+                                <strong>Customer Code:</strong>
+                                <br/>
                             </td>
+                            <td style="padding: 20px; width: 20%; vertical-align: top;">
+                                <span t-esc="o.invoice_date and o.invoice_date.strftime('%d/%m/%Y')"/>
+                                <br/>
+                                <span t-esc="o.invoice_date_due and o.invoice_date_due.strftime('%d/%m/%Y')"/>
+                                <br/>
+                                <span t-esc="o.partner_id.ref or ''"/>
+                                <br/>
+                            </td>
+
+
                         </tr>
                     </table>
+
                     <div style="margin-left: 20px;padding-left: 5px;font-size:40px;color:#e28743">
                         <strong>TAX Invoice:</strong>
                         <span t-esc="o.name or 'N/A'"/>
                     </div>
 
-                    <table style="margin-left: 20px; margin-top: 20px; padding-left: 5px;width:100%;">
-                        <tr>
-                            <td style=" width: 33%; text-align: left; ">
-                                <strong>Invoice Date:</strong>
-                            </td>
-                            <td style=" width: 33%; text-align: left; ">
-                                <strong>Due Date:</strong>
-                            </td>
-                            <td style=" width: 33%; text-align: left; ">
-                                <strong>Customer Code:</strong>
-                            </td>
-                        </tr>
-                    </table>
 
-                    <!-- Second table: Actual values -->
-                    <table style="margin-left: 20px; padding-left: 5px;width:100%;">
-                        <tr>
-                            <td style=" width: 33%; text-align: left; ">
-                                <span t-esc="o.invoice_date"/>
-                            </td>
-                            <td style=" width: 33%; text-align: left; ">
-                                <span t-esc="o.invoice_date_due"/>
-                            </td>
-                            <td style=" width: 33%; text-align: left; ">
-                                <span t-esc="o.partner_id.ref or ''"/>
-                            </td>
-                        </tr>
-                    </table>
                     <table style="margin-left: 20px;margin-right: 20px; padding-left: 5px;width:96%;margin-top: 20px;border-top: 1px solid #999;">
                         <tr>
                             <td style=" width: 30%; text-align: left; ">
@@ -136,16 +97,16 @@
                                     <t t-esc="line.name"/>
                                 </td>
                                 <td style="width: 20%; text-align: left;">
-                                    <t t-esc="'{:.2f}'.format(line.price_unit)"/>AED
+                                    <t t-esc="'{:.2f}'.format(line.price_unit,lines.currency_id.name)"/>
                                 </td>
                                 <td style="width: 10%; text-align: left;">
                                     <span t-esc="' , '.join(lines.tax_ids.mapped('name'))"/>
                                 </td>
                                 <td style="width: 20%; text-align: left;">
-                                    <t t-esc="'{:.2f}'.format(line.price_total - line.price_subtotal)"/>AED
+                                    <t t-esc="'{:.2f}'.format(line.price_total - line.price_subtotal,lines.currency_id.name)"/>
                                 </td>
                                 <td style="width: 16%; text-align: left;">
-                                    <t t-esc="'{:.2f}'.format(line.price_total)"/>AED
+                                    <t t-esc="'{:.2f}'.format(line.price_total,lines.currency_id.name)"/>
                                 </td>
                             </tr>
                         </table>
@@ -163,7 +124,7 @@
 
                             </td>
                             <td style=" width: 16%; text-align: left;border-top: 1px solid #999; ">
-                                <t t-esc="'{:.2f}'.format(o.amount_untaxed)"/>AED
+                                <t t-esc="'{:.2f}'.format(o.amount_untaxed,lines.currency_id.name)"/>
                             </td>
                         </tr>
                     </table>
@@ -183,7 +144,7 @@
 
                             </td>
                             <td style=" width: 16%; text-align: left; ">
-                                <t t-esc="'{:.2f}'.format(o.amount_total - o.amount_untaxed)"/>AED
+                                <t t-esc="'{:.2f}'.format(o.amount_total - o.amount_untaxed,lines.currency_id.name)"/>
                             </td>
                         </tr>
                     </table>
@@ -200,16 +161,15 @@
 
                             </td>
                             <td style=" width: 16%; text-align: left;border-top: 1px solid #999; ">
-                                <t t-esc="'{:.2f}'.format(o.amount_total)"/>AED
+                                <t t-esc="'{:.2f}'.format(o.amount_total,lines.currency_id.name)"/>
                             </td>
                         </tr>
 
                     </table>
 
-                    <div style="margin-left: 20px; padding-left: 5px;">
+                    <div style="margin-left: 20px;margin-top: 10px; padding-left: 5px;">
                         <strong>Amount In Words:</strong>
-                        <span t-esc="o.currency_id.amount_to_text(o.amount_total).replace('Rupees', 'AED').replace('Riyals', 'AED').replace('Paise', 'Fils').replace('Cents', 'Fils')"/>
-
+                        <t t-esc="o.currency_id.amount_to_text(o.amount_total)"/>
                     </div>
                     <div style="margin-left: 20px; padding-left: 5px; margin-top:20px; margin-bottom:10px;">
                         <strong>Bank Account Details:</strong>
@@ -220,39 +180,47 @@
                         <table class="bank-table">
                             <tr>
                                 <td>
-                                    <strong>Account Name:</strong>
+                                    <strong>
+                                        <span t-esc="o.company_id.name"/>
+                                    </strong>
                                 </td>
-                                <td>ASSURED GROW CONSULTANCY LLC</td>
+
+
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Account Number:</strong>
+                                    <span t-esc="o.bank_detail_id.account_number"/>
+
                                 </td>
-                                <td>13881494920001</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>IBAN:</strong>
+                                    <span t-esc="o.bank_detail_id.iban"/>
+
                                 </td>
-                                <td>AE820030013881494920001</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Bank Name:</strong>
+                                    <span t-esc="o.bank_detail_id.bank_name"/>
+
                                 </td>
-                                <td>ADCB</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Branch Name:</strong>
+                                    <span t-esc="o.bank_detail_id.branch_name"/>
+
                                 </td>
-                                <td>AL RIGGAH ROAD</td>
                             </tr>
                             <tr>
                                 <td>
                                     <strong>Swift Code:</strong>
+                                    <span t-esc="o.bank_detail_id.swift_code"/>
+
                                 </td>
-                                <td>ADCBAEAA</td>
                             </tr>
                         </table>
                     </div>
@@ -290,7 +258,7 @@
                                 </t>
                             </td>
                         </tr>
-                        
+
                     </table>
 
                 </t>
